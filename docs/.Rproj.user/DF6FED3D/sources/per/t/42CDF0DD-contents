@@ -1,0 +1,330 @@
+---
+title: "Lab-based experiments with PsychoPy"
+author: "Dr Lorna Camus, Psychology Technician"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: spacelab
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Welcome to the guidance documentation for using PsychoPy to create and run experiments in the labs.
+
+There is a table of contents on the left to help you navigate this guide and its main sections. Clicking on a section in the table will take you to the section and display subheadings within this section.
+
+Please be aware this is a live document and is subject to change as I expand the guidance.
+
+# What is PsychoPy?
+
+PsychoPy is a free software package allowing you to create and run a variety of Psychology experiments, and with Pavlovia you can take those experiments out of the lab and online.
+You can find out more about how to do that in the Pavlovia guide, found [here](https://canvas.qmu.ac.uk/courses/4490/pages/psychopy-and-pavlovia-2).
+This means you can use PsychoPy to create experiments on campus or at home on your own PC or laptop, and can collect data both in the lab and online.
+
+PsychoPy has extensive features to allow you to create a range of experiments.
+This guide will walk you through some of these features, but for an introduction to the software and more, you can find support on PsychoPy's [website](https://www.psychopy.org/documentation.html) and on [YouTube](https://www.youtube.com/@PsychoPy_official/videos).
+
+# Experiment design {#design}
+
+The guidance below assumes some basic knowledge of PsychoPy and experiment set up.
+If you've never created an experiment in PsychoPy before, try following [this tutorial](https://www.youtube.com/watch?v=fIw1e1GqroQ) by PsychoPy on how to create a Posner task.
+The specifics of the task are not important, the tutorial just gives you a chance to create an experiment from scratch and to get to know the software better.
+At the time of writing, the link to the supporting materials to create the task is broken, but by following the video you should be able to recreate the spreadsheet used in the task, and you can find replacement images for the task online.
+
+If you want more practice, you can follow the tutorials available on the [PsychoPy website](https://psychopy.org/tutorials/index.html).
+
+## Block design and counterbalancing
+
+In this section, I will cover how to create an experiment featuring block design, and how this can be adapted for counterbalancing participants between conditions.
+The end of this section will go over a more advanced way to counterbalance participants automatically.
+
+Please be aware that if you are planning on putting your experiment online, your experiment will not work if you are using automatic counterbalancing - if the experiment needs to be online, a different process is used.
+
+You should already be familiar with how to create an Excel file with the conditions for your experiment.
+If you aren't, please refer to the practice task mentioned [above](#design).
+
+Each subsection has a video demonstration at the end, walking you through the steps.
+
+### Block design
+
+If you have created an experiment in PsychoPy before, you will know that you can use an Excel spreadsheet to specify what the participant will see during the experiment.
+In a Posner task for example, the spreadsheet might link to the image you want the participant to see, where you want that image to appear, and whether each trial is congruent or incongruent (or valid/invalid).
+
+You might then have a second set of trials (maybe with a different task, or the same task done differently) and need a way to specify what both sets of trials will show (via multiple spreadsheets), and what order the sets will be shown in during the experiment.
+
+A block design in PsychoPy enables you to specify what is shown and in which order the different sets of trials will be presented to your participant.
+
+To start with, you will need to create a spreadsheet per block, will all the conditions for each block.
+For example, if you've done the practice Posner task mentioned [here](#design) you will remember the "conditions" spreadsheet you created for the experiment has three columns: the first links to the images the participant should see, the second specifies where on the screen the target image should appear, and the third categorises each trial as valid or invalid.
+
+Now imagine you wanted to have a block with only valid trials, and one block with only invalid trials, and then you wanted to randomise the order in which the blocks would present to participants.
+
+To do this, you will need to create 3 conditions files in Excel and two loops around your trial routine in PsychoPy.
+The 3 files are:
+
+* the valid conditions file
+* the invalid conditions file
+* the blocks file
+
+The first and second files will look similar to the "conditions" file you've made before, except the valid and invalid trials would be separated.
+In this case, they will also have the same column names.
+The last file links to the two other files, so that the first column lists the names of the two conditions files (in this example we'll call the first column ```blockfile```).
+
+Once these files are created, you will need to set up your PsychoPy experiment to call the right file in the right place using two different loops.
+
+Going back to your Posner task, you will have already created a loop around your trial routine, which specifies what each trial shows (by calling the "conditions" file under Conditions).
+The routine content itself will not change, but you will need to change the content of the Conditions box.
+To do so, click on the loop you created (named ```trials``` in the example) and instead of referencing one conditions file, you will reference the name of the first column in your blocks file, with a ```$``` before the name (like this: ```$blockfile```).
+What this does is tell the software to present what is in that column, which is either your valid or invalid conditions files (the order of the files is determined by the second loop which we haven't created yet).
+We will leave this loop on random - this randomises the trials within the block rather than the order in which the blocks appear (i.e. it randomises the contents of the valid or invalid conditions file).
+
+Now for the second loop - this loop will run around the trial routine and the first loop, and will be referencing your blocks file to tell the software which spreadsheets to use for the trials.
+Create the loop to start before and end after the first loop, then input the name of your blocks file in the Conditions box.
+The last things to set are the ```loopType```, which should be random if you want to randomise the order the blocks are shown in, and the ```nReps```, or the number of times you want to repeat the two blocks.
+If you've already set the first loop to repeat twice (like in the tutorial), the trials within one block will repeat twice, for a total of 4 sets of trials.
+If you set the ```nReps``` for the second loop to two also, this will repeat everything inside this loop twice - i.e. the 4 sets of trials above x2, for 8 sets of trials.
+This will depend on your experiment design.
+
+``` {r block-design, echo=F}
+#remotes::install_github("mccarthy-m-g/embedr")
+embedr::embed_video("block-design.mp4", "mp4")
+```
+
+### Manual counterbalancing {#manualCounter}
+
+The above method is good if you don't care what order participants see the stimuli.
+However, more often than not you will want to employ counterbalancing rather than fully random stimulus display.
+
+In an experiment, counterbalancing is a method used to counteract order effects that may be present when participants complete multiple conditions, by splitting participants into groups and assigning a display order per group.
+
+The counterbalancing examples used here will be simple; participants will need to complete two conditions, and we will split participants into two groups: one will complete the conditions in the order 1-2, and the other in the order 2-1.
+
+For manual counterbalancing, we will add a way for you as the researcher to assign participants one of two groups at the start of the experiment.
+
+Similarly to the block design example above, we will need multiple condition files and loops to create a counterbalancing design.
+4 files will need to be created:
+
+* The valid conditions file
+* The invalid conditions file
+* Group A's blocks file (called groupA_blocks.xlsx in this example)
+* Group B's blocks file (called groupB_blocks.xlsx in this example)
+
+The last two files will be similar to the blocks file in the block design example above, except the linked files will be in the order you want the groups to see the first two files (e.g. group A will see the valid conditions trials first, so that file will be listed first in that group's blocks file, and second for group B's blocks file).
+
+Before setting up the two loops, we first need to modify the experiment settings.
+Find the cogwheel button in the top taskbar in PsychoPy, then add a line to the Experiment info section (click the plus button to the right of the last line).
+In the Field column, enter ```group```, and in the Default column enter ```["A","B"]``` - this will create a new field in the window that pops up when the experiment is first launched, with a dropdown to select the participant's group (between groups A and B).
+
+Now, similarly to what we did in the block design example, we will set up two loops around the trial routine.
+The first loop will be the same as in the previous example, the guidance for which is repeated here for reference.
+Click on the loop you'd already created (named ```trials``` in the example) and instead of referencing one conditions file, you will reference the name of the first column in your blocks file, with a ```$``` before the name (like this: ```$blockfile```).
+What this does is tell the software to present what is in that column, which is either your valid or invalid conditions files (the order of the files is determined by the second loop which we haven't created yet).
+We will leave this loop on random - this randomises the trials within the block rather than the order in which the blocks appear (i.e. it randomises the contents of the valid or invalid conditions file).
+
+For the second loop - this loop will also run around the trial routine and the first loop like in the previous example, but this time it will be referencing one of your two groups' blocks file to tell the software which spreadsheets to use for the trials. This will be done based on what group is chosen when the experiment first starts.
+Create the loop to start before and end after the first loop, then input the name of your blocks file in the Conditions box.
+Since that file is dependent on what group has been chosen, we need to make the name of the blocks file update based on that choice.
+As both files are named using a similar formula (i.e. "group" + group number + "_blocks.xlsx"), we can use this formula in the Conditions box to tell PsychoPy what file it needs to find - since this is not the exact file name, we will start the formula with ```$```:
+
+```$'group' + expInfo["group"] + '_blocks.xlsx'```
+
+The ```expInfo["group"]``` is a variable that stores what group was chosen at the start of the experiment, and that is called in that formula to complete the name of the blocks file.
+For example, if you chose group A at the start of the experiment, the value of ```expInfo["group"]``` is A, and the formula results in "group" + A + "_blocks.xlsx", or "groupA_blocks.xlsx", which is the name of the blocks file for group A.
+
+The last things to set are the ```loopType```, which should be sequential if you want the order the blocks are shown in to correspond to the order in which they are listed in the relevant blocks file (which is how we counterbalance), and the ```nReps```, or the number of times you want to repeat the two blocks.
+If you've already set the first loop to repeat twice (like in the tutorial), the trials within one block will repeat twice, for a total of 4 sets of trials.
+If you set the ```nReps``` for the second loop to two also, this will repeat everything inside this loop twice - i.e. the 4 sets of trials above x2, for 8 sets of trials.
+This will depend on your experiment design, but in this case we'll set it to 1.
+
+``` {r manual-counter, echo=F}
+#remotes::install_github("mccarthy-m-g/embedr")
+embedr::embed_video("manual-counter.mp4", "mp4")
+```
+
+### Automatic counterbalancing {#autoCounter}
+
+Please be aware that if you are planning on putting your experiment online, your experiment will break if you are using this method - if the experiment needs to be online and auto counterbalancing is needed, a different method should be used.
+<!-- You can find help on how to implement automatic counterbalancing in online experiments in the [Pavlovia guide](https://canvas.qmu.ac.uk/courses/4490/pages/psychopy-and-pavlovia-2), under the "Online experiments" section. -->
+
+This method requires multiple elements to automatically assign participants to groups, keep track of how many participants are needed per group, and save what group participants have been assigned to in the final data file:
+
+* a spreadsheet (in csv file format) with the names of the groups and how many slots each group has (named "counterbalance_tracker.csv")
+* a Code component using Python to read this spreadsheet and 1) automatically assign participants to a group, 2) decrement the number of slots available for this group in the spreadsheet, and 3) save that updated file.
+* updating the loops (as done previously) to reference the right spreadsheets
+* the same 4 spreadsheets as in the previous example (one per trial type (valid/invalid) and one per group)
+
+The spreadsheet is simple, the first row has a group name per column (e.g. A in the first column and B in the second) and the second has the number of slots for each group (e.g. 5 in both columns, so 5 slots in each group).
+
+In PsychoPy you can then create a Code component (found under the Custom tab on the right-hand side) which you should add in your first routine, right at the top (this means it will be processed first when the experiment starts).
+When you create this, a code component window will open - the first thing you should do is change the code type to "Py" rather than the default "Auto->JS".
+
+Then, navigate to the "Before Experiment" tab and paste the code below as is.
+Note that on the fourth line (starting with ```group_info =```) and on the sixteenth line (starting with ```group_info.to_csv```) the software will read the spreadsheet you created with the groups' information - if you have named that spreadsheet something else, you will need to update that name on those lines.
+
+```python
+import pandas as pd
+
+try:
+    # read the csv
+    group_info = pd.read_csv('counterbalance_tracker.csv')
+
+    # randomly sample a column
+    group = group_info.sample(n=1, axis='columns')
+
+    # use the column header as the group label
+    thisgroup = group.columns[0]
+
+    # remove an available slot from this group
+    group_info[group.columns[0]][0] -= 1
+
+    # if there are no more slots available for this group, drop it 
+    if group_info[group.columns[0]][0] == 0:
+        group_info = group_info.drop(columns = [thisgroup])
+
+    # resave the data file
+    group_info.to_csv('counterbalance_tracker.csv', index = False)
+    
+except:
+    thisgroup = 'NO GROUP AVAILABLE'
+```
+
+Then navigate to the "Begin Routine" tab, and paste the code below as is.
+
+```python
+thisExp.addData("group", thisgroup)
+```
+
+Now your experiments should automatically go through your spreadsheet and assign participants to groups based on that spreadsheet.
+Note that the experiment will not send up an error if there are no slots left in the spreadsheet.
+It is expected that since this is a lab-based experiment, you will keep an eye on slots and not recruit more participants than you need.
+
+You now have to update your loops as done in the previous examples.
+Here we will also set up two loops around the trial routine.
+The first loop will be the same as in the previous examples, the guidance for which is repeated here for reference.
+Click on the loop you'd already created (named "trials" in the example) and instead of referencing one conditions file, you will reference the name of the first column in your blocks file, with a ```$``` before the name (like this: ```$blockfile```).
+What this does is tell the software to present what is in that column, which is either your valid or invalid conditions files (the order of the files is determined by the second loop which we haven't created yet).
+We will leave this loop on random - this randomises the trials within the block rather than the order in which the blocks appear (i.e. it randomises the contents of the valid or invalid conditions file).
+
+For the second loop - this loop will also run around the trial routine and the first loop, and reference one of your two groups' block files, like in the previous counterbalancing example. 
+Create the loop to start before and end after the first loop, then input the name of your blocks file in the Conditions box.
+Since that file is dependent on what group has been chosen, we need to make the name of the blocks file update based on that choice.
+As both files are named using a similar formula (i.e. "group" + group number + "_blocks.xlsx"), we can use this formula in the Conditions box to tell PsychoPy what file it needs to find - since this is not the exact file name, we will start the formula with ```$```:
+
+```$'group' + thisgroup + '_blocks.xlsx'```
+
+```thisgroup``` is a variable that stores what group was automatically chosen at the start of the experiment, and that is called in that formula to complete the name of the blocks file.
+For example, if the group chosen at the start of the experiment was group A, the value of ```thisgroup``` is A, and the formula results in "group" + A + "_blocks.xlsx", or "groupA_blocks.xlsx", which is the name of the blocks file for group A.
+This variable was created in the code component above - if you've copied and pasted the code as is, your variable will have the same name and the experiment should work as expected.
+
+The last things to set are the ```loopType```, which should be sequential if you want the order the blocks are shown in to correspond to the order in which they are listed in the relevant blocks file (which is how we counterbalance), and the ```nReps```, or the number of times you want to repeat the two blocks.
+If you've already set the first loop to repeat twice (like in the tutorial), the trials within one block will repeat twice, for a total of 4 sets of trials.
+If you set the ```nReps``` for the second loop to two also, this will repeat everything inside this loop twice - i.e. the 4 sets of trials above x2, for 8 sets of trials.
+This will depend on your experiment design, but in this case we'll set it to 1.
+
+``` {r auto-counter, echo=F}
+#remotes::install_github("mccarthy-m-g/embedr")
+embedr::embed_video("auto-counter.mp4", "mp4")
+```
+
+## Conditional loop display
+
+Instead of changing the order in which something is displayed to your participants, you may want to show one set of stimuli to participants in one group and a different set to participants in another group.
+
+Below I will walk you through two examples for how to create two loops within your experiment to show stimuli in loop 1 to group A and stimuli in loop 2 to group B. 
+
+In the first example, the groups will be allocated manually as we've done [here](#manualCounter) and in the second they will be allocated automatically, as we've done [here](#autoCounter).
+Refer to both sections for how to set up the group allocation.
+
+### Manual group allocation
+
+In this example, we will go through how to display a loop to participants depending on the group that's been chosen manually.
+There should be as many loops as groups (two in this example), and each loop should have different content based on what you wish to show to different groups.
+
+Here, we will have a loop called ```groupA``` with routines relevant to group A, and a loop called ```groupB``` with routines relevant to group B.
+For this example, each loop will have one routine with a Text component.
+
+First, create your routines for all your groups, then create loops that go around the routines for each group (if you have 3 routines for group A and 3 routines for group B, create a loop around the group A routines and another loop around the group B routines).
+The details of the loops don't matter for now, we will update those once we've set up the Code components in each loop.
+You can change the ```nReps``` to 1 to limit the time it takes for you to test the experiment.
+
+At this point the PsychoPy timeline should look like this:
+``` {r, fig.cap = "PsychoPy timeline for conditional loop display", fig.alt = "A screenshot of the PsychoPy environment, showing the timeline for this experiment.", label = "1.1", echo = F}
+knitr::include_graphics("1.1.png")
+```
+
+We now need to add Code components within each loop to tell PsychoPy to show only the loop associated with the participant's group.
+In your first routine of your group A loop, add a Code component, and move it to the top of that routine.
+In the Code component, navigate to the Begin Experiment tab and paste the code below.
+Note that if you want your loop to run more than once, you can change ```show_groupA = 1``` to the number of times you want to show your loop (e.g. ```show_groupA = 5``` if you want to repeat that loop 5 times).
+
+```python
+# this says that if the group chosen is B
+# the show_groupA loop will show 0 times
+# otherwise the loop will show 1 time (can increase if looking for repeat trials)
+if expInfo["group"] == "B":
+    show_groupA = 0
+else:
+    show_groupA = 1
+```
+
+You will now repeat this for the second loop, finding the first routine of that loop, adding a Code component to the top of the routine, and pasting the code below in the Begin Experiment tab of this Code component.
+Note that if you want your loop to run more than once, you can change ```show_groupB = 1``` to the number of times you want to show your loop (e.g. ```show_groupB = 5``` if you want to repeat that loop 5 times).
+
+```python
+# this says that if the group chosen is A
+# the show_groupB loop will show 0 times
+# otherwise the loop will show 1 time (can increase if looking for repeat trials)
+if expInfo["group"] == "A":
+    show_groupB = 0
+else:
+    show_groupB = 1
+```
+
+All you need to do now is update the loop settings to use the code we just added.
+In your group A loop, find the ```nReps``` line and add ```show_groupA``` instead of a number - this will read the number associated to ```show_groupA``` and use that as the number of repetitions for this loop.
+Do the same with your group B loop but add ```show_groupB``` instead.
+
+Now your experiment shows different loops to participants depending on the group they were allocated to at the start of the experiment.
+
+### Automatic group allocation
+
+Now we will do the same thing but with automatic group allocation.
+Set up your experiment similarly to the previous example, and make sure automatic group allocation is set up.
+
+Then add Code components within each loop to tell PsychoPy to show only the loop associated with the participant's group.
+In your first routine of your group A loop, add a Code component, and move it to the top of that routine.
+In the Code component, navigate to the Begin Experiment tab and paste the code below.
+Note that if you want your loop to run more than once, you can change ```show_groupA = 1``` to the number of times you want to show your loop (e.g. ```show_groupA = 5``` if you want to repeat that loop 5 times).
+
+```python
+# this says that if the group chosen is B
+# the show_groupA loop will show 0 times
+# otherwise the loop will show 1 time (can increase if looking for repeat trials)
+if thisgroup == "B":
+    show_groupA = 0
+else:
+    show_groupA = 1
+```
+
+You will now repeat this for the second loop, finding the first routine of that loop, adding a Code component to the top of the routine, and pasting the code below in the Begin Experiment tab of this Code component.
+Note that if you want your loop to run more than once, you can change ```show_groupB = 1``` to the number of times you want to show your loop (e.g. ```show_groupB = 5``` if you want to repeat that loop 5 times).
+
+```python
+# this says that if the group chosen is A
+# the show_groupB loop will show 0 times
+# otherwise the loop will show 1 time (can increase if looking for repeat trials)
+if thisgroup == "A":
+    show_groupB = 0
+else:
+    show_groupB = 1
+```
+
+All you need to do now is update the loop settings to use the code we just added.
+In your group A loop, find the ```nReps``` line and add ```show_groupA``` instead of a number - this will read the number associated to ```show_groupA``` and use that as the number of repetitions for this loop.
+Do the same with your group B loop but add ```show_groupB``` instead.
+
+Now your experiment shows different loops to participants depending on the group they were allocated to at the start of the experiment.

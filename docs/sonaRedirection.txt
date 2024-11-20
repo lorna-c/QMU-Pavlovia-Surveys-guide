@@ -1,0 +1,27 @@
+https://run.pavlovia.org/pavlovia/survey/?surveyId=89f7acbe-2456-4d2b-92ad-ad85d8fdfb80&participant=%SURVEY_CODE%
+'https://run.pavlovia.org/vj/vpt2023ver01?participant='+{participant}
+$"https://run.pavlovia.org/pavlovia/survey/?surveyId=4dd36d57-31bd-4c6a-95e7-bb7710210777&participant="+expInfo['participant']
+'https://qmu-psychology.sona-systems.com/webstudy_credit.aspx?experiment_id=254&credit_token=81c5fe90d32c478bbf9e0d5881b76c66&survey_code='+{participant}
+
+
+
+To keep sona redirection when daisy chaining surveys and experiments, need to make sure you maintain the participant ID given by Sona.
+For example, if you start with a survey, in the survey completion URL when daisy chaining to an experiment (for example) add the query string for participant and feed the participant code from the survey (which in turn comes from Sona).
+In a 5 step study (Sona -> survey -> experiment -> survey -> Sona):
+1. Survey - completion URL: '[experimentURL]?participant='+{participant} (the query allows the survey to feed the participant ID to the experiment, which is the same ID that Sona gave)
+2. Experiment - completion URL: $"[surveyURL]&participant="+expInfo['participant'] (the participant ID is the same as before, and is being fed into the last survey)
+3. Survey - completion URL: 'https://qmu-psychology.sona-systems.com/[SonaCompletionURL]&survey_code='+{participant} (again, the participant ID is the same as the one at the start, which allows the loop to close and redirection to Sona for credit granting to happen).
+
+
+NOTE: if researcher is going to recruit outside of Sona, need to put some logics in place so that non-Sona participants are not redirected to Sona -- see Sona Multi Redirection survey:
+- go to the general survey settings, find Survey Complete tab
+- set up dynamic URL so that if participant is from Sona, they are redirected to Sona ({participant}>0 will redirect Sona participants, but not external participants)
+- do not put anything in the general Completion URL in the Overview tab -- if participant doesn't have a participant number (ie didn't come from Sona) they will not be redirected to anything
+- if you are daisy chaining an experiment to this one, you need to set up the completion URL in two different places: the one for Sona participants should be set up as a dynamic URL in the survey settings, and use {participant}>0 as the condition and the experiment URL with the participant query string; the external one should be set up in the Overview tab of the survey under Completion URL and not use the query string at the end of the experiment url
+
+
+For Nick:
+- there should be 2 dynamic URLS for Sona redirections, one with the conditions {participant}>0 + high ace scores, and one with {participant}>0 + low ace scores
+- not sure if you can do everything in the one experiment, as there's no way to set up the Overview tab URL to be conditional
+- can try having 2 other dynamic URLS without the {participant}>0 (so just high or low ace score) and see if that kicks in when participant is not from Sona, but it might mess with the other 2 URLs
+- in that case he would need a separate survey for external participants
