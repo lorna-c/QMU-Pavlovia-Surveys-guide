@@ -1,5 +1,5 @@
 ---
-title: "Pavlovia Surveys and Experiments"
+title: "Pavlovia Surveys"
 author: "Dr Lorna Camus, Psychology Technician"
 date: "`r Sys.Date()`"
 output: 
