@@ -54,6 +54,28 @@ If you have any questions, please contact me at [lcamus@qmu.ac.uk](mailto:lcamus
 Each section below covers different aspects of Pavlovia surveys - it is recommended you read all of them in detail for best results.
 <!-- If you are creating a survey, the Online Experiments tab can be ignored. -->
 
+## Latest updates {#updates}
+
+Below are the latest updates to Pavlovia Surveys at the time of writing (`r format(Sys.time(), '%d %B %Y')`).
+
+#### Version choice
+You can now select which version of Pavlovia you want to use for your survey - for most purposes, it is recommended to use version 2024.2.0 rather than the latest (2024.3.0) in case of issues with the latest version.  
+Be aware that currently, if you have selected v2024.3.0 it reverts to v2024.2.0 when you exit Pavlovia.
+If you wish to use v2024.3.0, make sure the survey link you use specifies that version - your link should look something like this: <pre>https://run.pavlovia.org/pavlovia/survey-<b>2024.3.0</b>/?surveyId=08016aae-5160-42e2-869f-7f5402773d93</pre>
+
+#### Save results on each page
+There is now the option to save participant responses on each page (requires using version 2024.3.0).
+To enable this, navigate to the Overview tab in your survey on Pavlovia, then find the Settings section and toggle the "Save on each page" option.
+This happens in real time, which means a participant's response is saved immediately upon moving on to the next page of a survey.  
+As a result, if you download your survey results at various times during data collection, you might get some participants' responses at different stages of completion.
+If you are going to use this function, it is recommended to choose a date and time for a final download of your survey responses, and to not work on your data before then.
+
+#### New and improved question types
+
+* additional Single-Line Input question settings: you can now specify what type of response is expected (e.g. Text, Number, Date, etc.)
+* additional Single-Select Matrix question settings: you can now choose to require answers for all rows of the question (check the box "Require answer for all rows" under the Validation tab in the question's settings)
+* additional Rating scale question settings: you can now choose the scale to be labels (numbers), stars or smiley faces (stars and smileys can be set up to assign different values to each rating point)
+
 ## Survey creation {#survey1}
 Once you are signed into Pavlovia, you will land on your Dashboard, where you can see all your account's details.
 For the purposes of creating a survey, we are only interested in the Surveys tab (see picture below, in the red box). Click on the Surveys tab to start.
@@ -131,27 +153,28 @@ knitr::include_graphics("3.2.jpeg")
 
 The question types available are described below, however I recommend playing around with different types to see what suits your needs best.
 
-* Single input: Allows for a one-line text entry.
-* Checkbox: Multiple-choice question where multiple answers are allowed.
-* Radiogroup: Multiple-choice question where only one answer is allowed.
-* drop-down: Multiple-choice question where one answer can be selected from a drop-down menu.
-* Comment: Allows for a multi-line text entry.
-* Rating: Single-question, Likert-type scale answer.
+* Single-Line Input: Allows for a one-line text entry.
+* Checkboxes: Multiple-choice question where multiple answers are allowed.
+* Radio Button Group: Multiple-choice question where only one answer is allowed.
+* Dropdown: Multiple-choice question where one answer can be selected from a dropdown menu.
+* Multi-Select Dropdown: Multiple-choice question where multiple answers can be selected from a dropdown menu.
+* Long Text: Allows for a multi-line text entry.
+* Rating Scale: Single-question, Likert-type scale answer.
 * Ranking: Allows respondent to rank different answers.
-* Image picker: Respondents choose an image or video out of many.
-* Boolean: Dichotomous answer (e.g. Yes/No) - does not allow for more options.
+* Image Picker: Respondents choose an image or video out of many.
+* Yes/No (Boolean): Dichotomous answer (e.g. Yes/No) - does not allow for more options.
 * Image: Displays an image, video or Youtube video (via link) - there is no question.
 * HTML: Allows user to create and display text. Typically used to display information and debrief documents or other standalone text (not questions/answers).
-* Signature pad: Allows respondents to draw their response.
+* Signature: Allows respondents to draw their response.
 * Expression (read-only): Used to calculate a value for later use in the survey - there is no question.
-* File: Allows respondents to upload a file.
-* Single-choice matrix: Creates a matrix of multiple-choice questions with the same set of answers - typically used for questionnaires with multiple questions and Likert-type scale answers. Only allows one answer per row.
+* File Upload: Allows respondents to upload a file.
+* Single-Select Matrix: Creates a matrix of multiple-choice questions with the same set of answers - typically used for questionnaires with multiple questions and Likert-type scale answers. Only allows one answer per row.
 * More: The more button (three dots ...) contains additional question types
-  + Multiple-choice matrix: Same as single-choice matrix but allows multiple answers per row.
-  + Dynamic matrix: Used to get a Multiple-Choice Matrix without a column of items.
-  + Multiple text: Creates a form made up of several Single Input questions
+  + Multi-Select Matrix: Same as single-choice matrix but allows multiple answers per row.
+  + Dynamic Matrix: Used to get a Multiple-Choice Matrix without a column of items.
+  + Multiple Textboxes: Creates a form made up of several Single Input questions
   + Panel: Creates a form made up of multiple questions of any type.
-  + Dynamic panel: Creates a form made up of multiple questions of any type, which can be expanded by the participant.
+  + Dynamic Panel: Creates a form made up of multiple questions of any type, which can be expanded by the participant.
   
 To add a new question, click on "Add question" or on any of the question icons in the toolbox.
 You can also drag the question icon anywhere on the survey to place a new question where you need in the survey.
