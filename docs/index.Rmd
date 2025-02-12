@@ -61,7 +61,10 @@ Below are the latest updates to Pavlovia Surveys at the time of writing (`r form
 #### Version choice
 You can now select which version of Pavlovia you want to use for your survey - for most purposes, it is recommended to use version 2024.2.0 rather than the latest (2024.3.0) in case of issues with the latest version.  
 Be aware that currently, if you have selected v2024.3.0 it reverts to v2024.2.0 when you exit Pavlovia.
-If you wish to use v2024.3.0, make sure the survey link you use specifies that version - your link should look something like this: <pre>https://run.pavlovia.org/pavlovia/survey-<b>2024.3.0</b>/?surveyId=08016aae-5160-42e2-869f-7f5402773d93</pre>
+If you wish to use v2024.3.0, make sure the survey link you use specifies that version - your link should look something like this: <pre>https://run.pavlovia.org/pavlovia/survey-<b>2024.3.0</b>/?surveyId=08016aae-5160-42e2-869f-7f5402773d93</pre>  
+  
+Please be aware that if you are using logics with more than one item (e.g. you make a question Visible If Q1 = 2 **and** Q3 = 4), this will not work in the later versions - in these cases you should use version 2024.1.0.
+I will update this section if this changes.
 
 #### Save results on each page
 There is now the option to save participant responses on each page (requires using version 2024.3.0).
@@ -403,7 +406,7 @@ However, **be aware that currently there isn't a way to ensure an even distribut
 For example, if you have two questionnaires, you cannot specify that each questionnaire should be seen first by an equal number of participants (e.g. 20 participants see questionnaire 1 first, and 20 see questionnaire 2 first).
 If you wish to do this you will need to integrate your surveys with an online PsychoPy experiment.
 
-I will follow the example above to demonstrate how to set up a shuffling survey below (you can find the [video demonstration](#shuffle1) after the instructions).
+I will follow the example above to demonstrate how to set up a shuffling survey below (you can find the video demonstration after the instructions).
 
 In a new survey, create your first questionnaire as you normally would.
 When this is done, toggle the flow view.
@@ -510,7 +513,7 @@ Whatever logic you use, please make sure that the logic is working before starti
 
 Setting up this logic will depend on how you have set up your consent form, but I will demonstrate how to set up the logic based on the example above.
 <!-- This is similar to the complex logic example shown [here](#logic). -->
-You can find a video demonstration [here](#example1c), after the text explanation.
+You can find a video demonstration below, after the text explanation.
 
 For this type of logic, rather than setting the conditions at the survey level, we will set conditions at the page level.
 You will need to change the logic for every page you have questions on (i.e. every page where participants have to respond after your information and consent page).
@@ -612,7 +615,7 @@ embedr::embed_video("example1c.mp4", "mp4")
 
 Putting this logic in place will depend on how you have set up your consent form (I will use the same as before).
 <!-- This is similar to the complex logic example shown [here](#logic). -->
-You can find a video demonstration [here](#example1b), after the text explanation.
+You can find a video demonstration below, after the text explanation.
 
 First, open the Survey settings (not the Page or Question settings) by clicking the settings button.
 Then find the Logic tab, and click "Add New" in the box titled "Triggers".
@@ -668,8 +671,6 @@ embedr::embed_video("example1b.mp4", "mp4")
 
 ## Participant group allocation
 
---- FYI there is currently a bug around this which means it does not work properly - you will need to use integration with PsychoPy to assign participants to groups - see [here](#grouping) for instructions. ---
-
 In some cases you may want to show different parts of your survey to different participants based on the group they are in.
 In this example I will walk you through how to randomly allocate participants to one of two groups, and how to specify what parts of your survey each group should see.
 
@@ -681,6 +682,7 @@ In the "Expression" box, paste the following line: ```random()*3+1```.
 
 In the same page, add a second "Expression (read-only)" question and name it ```group```.
 In the "Expression" box, paste the following line: ```iif({random} > 2, 'A', 'B')```.
+To ensure your survey saves what group the participant has been assigned to in your final data file, navigate to the Data tab in the question's settings, find the "Clear value if question becomes hidden" dropdown, and select "None".
 
 Now set the survey to Running and check that the group allocation is working (you should see the ```group``` question change between A and B when you refresh the page).
 Once it works, go to the page's settings and uncheck the "Visible" checkbox so participants don't see it.
@@ -696,7 +698,7 @@ Test this before sending the survey link to participants.
 
 Note that this does not assign a quota to either group, so you cannot control how many participants are assigned to either group.
 You can check in your data how many participants have been assigned to each group, and modify the survey if you need more participants from one group (remove the random allocation and make only the pages for the group needed visible).
-If you need more control over how many participants are in each group, and don't want to periodically check your data, you can use the method outlined [here](#loopDisplay).
+If you need more control over how many participants are in each group, and don't want to periodically check your data, you can use the method outlined [in the Pavlovia experiments guide](https://lorna-c.github.io/QMU-Pavlovia-Exps-guide/#Conditional_loop_display).
 
 ## Survey settings -- important, do not skip {#settings}
 
@@ -881,7 +883,7 @@ You will need this later.
 knitr::include_graphics("6.3.jpeg")
 ```
 
-Next, you will need to log into Pavlovia and make some changes to your survey (there is a [video demonstration](#sona1) after the instructions).
+Next, you will need to log into Pavlovia and make some changes to your survey (there is a video demonstration after the instructions).
 We are going to create a dynamic URL to redirect participants to Sona.
 A dynamic URL enables us to tell Pavlovia to only redirect participants to Sona if they came from Sona in the first place.
 This is particularly useful for those of you who will recruit participants within and outside of Sona, as you want to avoid redirecting participants to Sona if they weren't recruited from there.
@@ -944,7 +946,7 @@ To do this:
 Paste this link in a text editor, then delete everything after the question mark and replace with ```download=1```.
 For example, my original link is ```https://qmu-my.sharepoint.com/:u:/g/personal/lcamus_qmu_ac_uk/Ech7nLD8z25Enn7vImvc-9QBdQFrqqd9qW_Yf-XLTCdvvw?e=M4Oe5j```, and the new modified link is ```https://qmu-my.sharepoint.com/:u:/g/personal/lcamus_qmu_ac_uk/Ech7nLD8z25Enn7vImvc-9QBdQFrqqd9qW_Yf-XLTCdvvw?download=1```.
 
-Now in your Pavlovia survey (see [video demonstration](#audioq1) at the end):
+Now in your Pavlovia survey (see video demonstration at the end):
 
 To create an audio question with controls (so participants can press play and pause, create a new HTML question, and paste the following in the HTML markup box:
 ```html
