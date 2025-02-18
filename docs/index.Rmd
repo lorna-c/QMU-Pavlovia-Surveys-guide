@@ -672,29 +672,61 @@ embedr::embed_video("example1b.mp4", "mp4")
 ## Participant group allocation
 
 In some cases you may want to show different parts of your survey to different participants based on the group they are in.
-In this example I will walk you through how to randomly allocate participants to one of two groups, and how to specify what parts of your survey each group should see.
+In this example I will walk you through how to randomly allocate participants to one of two groups (or more), and how to specify what parts of your survey each group should see.
 
-First, make sure you have pages with questions for group A, and pages with questions for group B.
+First, make sure you have pages with questions for group 1, and pages with questions for group 2 (if you have more groups, make sure each group is assigned one or more pages).
 In this example I will have one page to randomly allocate participants to a group, and one page per group.
 
-In an empty page, before the pages with your questions, add an "Expression (read-only)" question and name it ```random```.
-In the "Expression" box, paste the following line: ```random()*3+1```.
-
-In the same page, add a second "Expression (read-only)" question and name it ```group```.
-In the "Expression" box, paste the following line: ```iif({random} > 2, 'A', 'B')```.
+In an empty page, before the pages with your questions add an "Expression (read-only)" question and name it ```group```.
+In the "Expression" box, paste the following line: ```{group}```.
 To ensure your survey saves what group the participant has been assigned to in your final data file, navigate to the Data tab in the question's settings, find the "Clear value if question becomes hidden" dropdown, and select "None".
 
-Now set the survey to Running and check that the group allocation is working (you should see the ```group``` question change between A and B when you refresh the page).
-Once it works, go to the page's settings and uncheck the "Visible" checkbox so participants don't see it.
-
-Now in your pages for group A, go to the settings and navigate to the "Logic" tab.
+Now in your pages for group 1, go to the settings and navigate to the "Logic" tab.
 Click the wand icon for the "Visible if" box to open the logics window.
-Click the "Select" button and choose the ```group``` question, then enter "A" in the box under ```group```.
+Click the "Select" button and choose the ```group``` question, then enter ```1``` in the box under ```group```.
 
-Do the same thing for the group B pages, instead entering "B" in the box under ```group```.
+Do the same thing for the group 2 pages, instead entering ```2``` in the box under ```group```.
+If you have more groups, continue as above for each group page.
 
-Now your group A participants should only see group A pages, and similarly for group B participants.
-Test this before sending the survey link to participants.
+Now your group 1 participants should only see group 1 pages, and similarly for group 2 participants.
+
+To actually assign a group to participants, we will use another online experiment and feed it our survey.
+To do this, get your survey's ID from the title banner of your survey in Pavlovia (see picture below).
+
+``` {r, fig.cap = "Survey ID location", fig.alt = "Survey ID location: A screenshot of the Pavlovia Survey designer, and specifically of where to find the Survey ID number.", label = "surveyID", echo = F}
+knitr::include_graphics("surveyID.png")
+```
+
+Copy the numbers after the # symbol.
+Then paste this ID into the following link, replacing the bold text with the ID: <pre>https://run.pavlovia.org/vespr/survey-group/?surveyId=<b>surveyID</b>&groups=2</pre>
+
+Your link should look like this: <pre>https://run.pavlovia.org/vespr/survey-group/?surveyId=ca656b83-b465-4399-a1cf-0ac085f17230&groups=2</pre>
+
+If you have more than 2 groups, change the number behind groups= (at the end of the link) with the number of groups you have (currently tested up to 3 groups).
+
+This new link is the link you should give participants and use on recruitment platforms (e.g. Sona).
+
+Test this link before sending it to participants, making sure the groups are allocated properly (the survey content seen matches the group allocated, the group saved in the data matches the group allocated during the survey, etc.).
+Do not distribute your survey until you are certain this works.
+
+<!-- In an empty page, before the pages with your questions, add an "Expression (read-only)" question and name it ```random```. -->
+<!-- In the "Expression" box, paste the following line: ```random()*3+1```. -->
+
+<!-- In the same page, add a second "Expression (read-only)" question and name it ```group```. -->
+<!-- In the "Expression" box, paste the following line: ```iif({random} > 2, 'A', 'B')```. -->
+<!-- To ensure your survey saves what group the participant has been assigned to in your final data file, navigate to the Data tab in the question's settings, find the "Clear value if question becomes hidden" dropdown, and select "None". -->
+
+<!-- Now set the survey to Running and check that the group allocation is working (you should see the ```group``` question change between A and B when you refresh the page). -->
+<!-- Once it works, go to the page's settings and uncheck the "Visible" checkbox so participants don't see it. -->
+
+<!-- Now in your pages for group A, go to the settings and navigate to the "Logic" tab. -->
+<!-- Click the wand icon for the "Visible if" box to open the logics window. -->
+<!-- Click the "Select" button and choose the ```group``` question, then enter "A" in the box under ```group```. -->
+
+<!-- Do the same thing for the group B pages, instead entering "B" in the box under ```group```. -->
+
+<!-- Now your group A participants should only see group A pages, and similarly for group B participants. -->
+<!-- Test this before sending the survey link to participants. -->
 
 Note that this does not assign a quota to either group, so you cannot control how many participants are assigned to either group.
 You can check in your data how many participants have been assigned to each group, and modify the survey if you need more participants from one group (remove the random allocation and make only the pages for the group needed visible).
