@@ -63,8 +63,11 @@ You can now select which version of Pavlovia you want to use for your survey - f
 Be aware that currently, if you have selected v2024.3.0 it reverts to v2024.2.0 when you exit Pavlovia.
 If you wish to use v2024.3.0, make sure the survey link you use specifies that version - your link should look something like this: <pre>https://run.pavlovia.org/pavlovia/survey-<b>2024.3.0</b>/?surveyId=08016aae-5160-42e2-869f-7f5402773d93</pre>  
   
-Please be aware that if you are using logics with more than one item (e.g. you make a question Visible If Q1 = 2 **and** Q3 = 4), this will not work in the later versions - in these cases you should use version 2024.1.0.
-I will update this section if this changes.
+Please be aware that if you are using logics with more than one item (e.g. you make a question Visible If {gender} = 2 **and** {group} = 1), in versions 2024.2.0 and 2024.3.0 you need to specify the "block" the questions are in (this is due to the new way they structure surveys in later versions).
+In the above example, simply change {gender} = 2 and {group} = 1 to {block_1/gender} = 2 and {block_1/group} = 1 (this assumes your questions are in block 1, which should be the case if you only have one block in your survey - if you have more make sure you specify the right block).
+
+This is also the case for any Expression (read-only) question calling on other questions (e.g. an Expression (read-only) question for scoring might have {q1} + {q2} + {q3} in the Expression box to add up the scores of three questions).
+In versions 2024.2.0 and 2024.3.0 you also need to specify the block of questions used in Expression (read-only) questions, like this: {block_1/q1} + {block_1/q2} + {block_1/q3}.
 
 #### Save results on each page
 There is now the option to save participant responses on each page (requires using version 2024.3.0).
