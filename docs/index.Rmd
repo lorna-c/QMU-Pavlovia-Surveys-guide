@@ -54,6 +54,9 @@ If you have any questions, please contact me at [lcamus@qmu.ac.uk](mailto:lcamus
 Each section below covers different aspects of Pavlovia surveys - it is recommended you read all of them in detail for best results.
 <!-- If you are creating a survey, the Online Experiments tab can be ignored. -->
 
+**If you cannot read the entire document, pay particular attention to the sections on [informed consent](#consent) and [survey settings](#settings).**
+Failure to read through these sections at a minimum will lead to broken surveys, poor data quality and even potentially unusable data.
+
 ## Latest updates {#updates}
 
 Below are the latest updates to Pavlovia Surveys at the time of writing (`r format(Sys.time(), '%d %B %Y')`).
@@ -764,6 +767,11 @@ For example, ```child.consent 2``` is not a good name, instead use something lik
 
 Naming your questions will make navigating your survey, and setting up things such as logics much easier, as questions are referenced and referred to by this name within the survey.
 Participants cannot see this name, but it will make your life easier.
+
+**Do not change the question name after data collection has started, as this will mess up your final data file.**
+The platform will save data from this question under two column titles, the pre-change title of the question, and the post-change title of the question.
+This means your data will be split, and if you don't know what the question was called originally, you won't be able to match cases (and will end up with unusable data).
+If you need to change the name of your questions but have already started data collection, you will need to make that change in your data file once it has been downloaded.
 
 ### Change how a response is recorded
 In a matrix question's settings, the Columns and Rows tabs will allow you to modify the matrix's columns and rows.
